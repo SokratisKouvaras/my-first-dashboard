@@ -19,8 +19,8 @@ server <- function(input,output,session){
   
   output$table <- DT::renderDataTable({
     
-    DT::datatable(
-      data3,
+    datatable(
+      covid_dataset,
       filter = 'top', extensions = c('Buttons', 'Scroller'),
       options = list(scrollY = 500,
                      scrollX = 500,
@@ -92,7 +92,34 @@ server <- function(input,output,session){
       theme(axis.text.x = element_text(angle=45, hjust = 1))
   })
   
-  output$no_of_participants <- renderText({ nrow(data3) })
+  # Total number of cases KPI box ----------------------------------------------
+  output$total_number_of_cases <- renderInfoBox({
+      infoBox(
+      title = "Total no of cases",
+      value = sum(covid_dataset$CASES)
+    )
+    })
   
-  output$org_name <- renderText({unique(data3[,2])}) 
+  # Total number of cases Text output ------------------------------------------
+  output$total_number_of_cases <- renderText({
+    sum(covid_dataset$CASES)
+  })
+  
+  # Number of female cases KPI box ----------------------------------------------
+  output$total_number_of_cases_infobox <- renderInfoBox({
+    infoBox(
+      title = "Total no of cases",
+      value = sum(covid_dataset$CASES)
+    )
+  })
+  
+  # Number of female cases Text output ------------------------------------------
+  output$total_number_of_female_cases <- renderText({
+    covid_dataset %>%
+      filter(SEX=='F') %>%
+      pull(CASES) %>%
+      sum()
+  })
+  
+
 }

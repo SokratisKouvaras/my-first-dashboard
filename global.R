@@ -16,7 +16,10 @@ library(leaflet)
 library(ggplot2)
 library(ggwordcloud)
 library(plotly)
+library(dplyr)
 
 # Source additional configuration files and helper functions
 source("config.R")
 source("helpers.R")
+
+covid_dataset <- get_dataset()

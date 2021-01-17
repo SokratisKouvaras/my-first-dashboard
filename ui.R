@@ -3,13 +3,20 @@ ui <-  function(input,output,session){dashboardPagePlus  (
   header = dashboardHeaderPlus(title = 'My first Dashboard'),
   sidebar = dashboardSidebar(
     sidebarMenu(
+      menuItem("Test", tabName = "test", icon = icon("home")),
+      
       menuItem("Tab 1", tabName = "dashboard", icon = icon("home")),
-      menuItem("Tab 2", tabName = "dataset", icon = icon("table")),
+      menuItem("Dataset Overview", tabName = "dataset", icon = icon("table")),
       menuItem("Tab 3", tabName = "visuals", icon = icon("area-chart"))
     )
   ),
   dashboardBody(
     tabItems(
+      tabItem(tabName = 'test',
+              column(width = 12,
+              fluidRow(infoBoxOutput('total_number_of_cases_infobox',width = 3))
+              )
+              ),
       tabItem(tabName = "dashboard",
               fluidRow(
                 
@@ -17,24 +24,24 @@ ui <-  function(input,output,session){dashboardPagePlus  (
                   width = 12,
                   closable = FALSE,
                   collapsible = TRUE,
-                  title = textOutput("org_name",inline=TRUE),
+                  title = "Basic Metrics",
                   status = "warning",
                   
                   appButton(
-                    inputId = "USD",
-                    label = "KPI 1", 
-                    icon = icon("registered"), 
+                    inputId = "kpi1",
+                    label = "Total no of cases", 
+                    icon = icon("users"), 
                     enable_badge = TRUE, 
                     badgeColor = "red", 
-                    dashboardBadge(textOutput("no_of_participants",inline=TRUE), color = "orange")
+                    dashboardBadge(textOutput("total_number_of_cases",inline=TRUE), color = "orange")
                   ),
                   appButton(
-                    inputId = "USD0",
+                    inputId = "kpi2",
                     label = "KPI 2", 
                     icon = icon("users"), 
                     enable_badge = TRUE, 
                     badgeColor = "red",
-                    dashboardBadge("630", color = "orange")
+                    dashboardBadge(textOutput("total_number_of_female_cases",inline=TRUE), color = "orange")
                   ),
                   
                   appButton(
@@ -103,16 +110,12 @@ ui <-  function(input,output,session){dashboardPagePlus  (
                   socialButton(
                     url = "https://www.linkedin.com/in/sokratis-kouvaras/",
                     type = "linkedin"
-                  ),
-                  socialButton(
-                    url = "https://github.com/SokratisKouvaras",
-                    type = "github"
                   )
-                ),
+                )
               )
       ),
       tabItem(tabName = "dataset",
-              DT::dataTableOutput("table")
+              dataTableOutput("table")
       ),
       tabItem(tabName = "visuals",
               fluidRow(title = "Registration",

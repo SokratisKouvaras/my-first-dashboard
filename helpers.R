@@ -1,5 +1,12 @@
 # Helper functions -------------------------------------------------------------
 
+get_dataset <- function(){
+  temp = tempfile(fileext = ".xlsx")
+  download.file(CONFIG.DATASET_URL, destfile=temp, mode='wb')
+  dataset <- readxl::read_excel(temp, sheet =1)
+  dataset
+}
+
 create_default_datatable <- function(df, selection = "none", options = NULL, ...){
   if (is.null(options)){
     options <- get_default_datatable_options(df)
