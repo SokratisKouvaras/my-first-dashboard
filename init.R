@@ -1,5 +1,8 @@
 # init.R 
 
+packrat::on()
+packrat::restore()
+
 my_packages <- c('shinydashboard',
                  'shinydashboardPlus',
                  'shiny',
@@ -21,6 +24,3 @@ install_if_missing <- function(package){
 }
 
 invisible(sapply(my_packages,install_if_missing))
-
-packrat::on()
-packrat::restore()
