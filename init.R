@@ -10,6 +10,8 @@ my_packages <- c('shinydashboard',
                  'leaflet',
                  'ggplot2',
                  'plotly',
+                 'dplyr',
+                 'readxl',
                  'DT')
 
 install_if_missing <- function(package){

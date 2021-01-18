@@ -16,6 +16,7 @@ library(leaflet)
 library(ggplot2)
 library(ggwordcloud)
 library(plotly)
+library(readxl)
 library(dplyr)
 
 # Source additional configuration files and helper functions
