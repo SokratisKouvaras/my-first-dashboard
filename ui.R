@@ -1,4 +1,5 @@
 ui <-  function(input,output,session){dashboardPagePlus  (
+  title = "My first Dashboard",
   skin = "red",
   header = dashboardHeaderPlus(title = 'My first Dashboard'),
   sidebar = dashboardSidebar(
