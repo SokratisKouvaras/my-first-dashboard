@@ -17,21 +17,28 @@ server <- function(input,output,session){
     res
   })
   
+  # Dataset table --------------------------------------------------------------
   output$table <- DT::renderDataTable({
+    tryCatch({
+      covid_dataset %>%
+        prepare_table() %>%
+        create_datatable(CONFIG_TABLE_OPTIONS)
+    },
+    error=function(err) {
+      warning(paste('output$table throws the following error: ',geterrmessage()))
+      column_names <- c(
+        'Date',
+        'Province',
+        'Region',
+        'Age Group',
+        'Sex',
+        'Cases'
+      )
+      create_empty_dataframe(column_names) %>%
+        create_datatable(CONFIG_TABLE_OPTIONS)
+    }
+    )
     
-    datatable(
-      covid_dataset,
-      filter = 'top', extensions = c('Buttons', 'Scroller'),
-      options = list(scrollY = 500,
-                     scrollX = 500,
-                     deferRender = TRUE,
-                     scroller = FALSE,
-                     paging = TRUE,
-                     pageLength = 50,
-                     buttons = list(list(extend = 'colvis', targets = 0, visible = FALSE)),
-                     dom = 'lBfrtip',
-                     fixedColumns = TRUE), 
-      rownames = FALSE)
   })
   
   output$time_series <- renderPlot({

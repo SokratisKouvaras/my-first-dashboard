@@ -7,6 +7,30 @@ get_dataset <- function(){
   dataset
 }
 
+prepare_table <- function(df){
+  df %>%
+    rename('Sex'=SEX,
+           'Date'=DATE,
+           'Province'=PROVINCE,
+           'Region'=REGION,
+           'Age Group'=AGEGROUP,
+           'Cases'=CASES)
+}
+
+create_datatable <- function(df,options){
+  df %>%
+  datatable(
+    filter = 'top', extensions = c('Buttons', 'Scroller'),
+    options = options, 
+    rownames = FALSE)
+}
+
+create_empty_dataframe <- function(col_names){
+df <- data.frame(matrix(ncol = length(col_names), nrow = 0))
+colnames(df) <- col_names
+return(df)
+}
+
 create_default_datatable <- function(df, selection = "none", options = NULL, ...){
   if (is.null(options)){
     options <- get_default_datatable_options(df)

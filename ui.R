@@ -4,7 +4,6 @@ ui <-  function(input,output,session){dashboardPagePlus  (
   sidebar = dashboardSidebar(
     sidebarMenu(
       menuItem("Test", tabName = "test", icon = icon("home")),
-      
       menuItem("Tab 1", tabName = "dashboard", icon = icon("home")),
       menuItem("Dataset Overview", tabName = "dataset", icon = icon("table")),
       menuItem("Tab 3", tabName = "visuals", icon = icon("area-chart"))
