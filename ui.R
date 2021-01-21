@@ -85,7 +85,7 @@ ui <-  function(input,output,session){dashboardPagePlus  (
                   status = "warning",
                   closable = FALSE,
                   collapsible = TRUE,
-                  width = 12,
+                  width = 6,
                   selectInput("no_of_companies", "Drop-down choices: ",
                               c("Choice 1" = "choice1",
                                 "Choice 2" = "choice2",
@@ -96,6 +96,16 @@ ui <-  function(input,output,session){dashboardPagePlus  (
                                 "Choice 2" = "choice2",
                                 "Choice 3" = "choice3"),
                               selected = "choice1")
+                ),
+                boxPlus(
+                  title = "VIEW 2",
+                  plotlyOutput("region_bar_plot", height = 250),
+                  collapsed = FALSE,
+                  status = "warning",
+                  closable = FALSE,
+                  collapsible = TRUE,
+                  width = 6
+                  
                 )
               ),
               fluidRow(

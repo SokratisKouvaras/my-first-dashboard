@@ -7,6 +7,14 @@ get_dataset <- function(){
   dataset
 }
 
+prepare_barplot <- function(df,col){
+  df %>%
+    group_by(!!as.name(col)) %>%
+    summarise(CASES = sum(CASES)) %>%
+    mutate(!!as.name(col) := ifelse(is.na(!!as.name(col)),'Uknown',!!as.name(col))) %>%
+    ungroup()
+}
+
 prepare_table <- function(df){
   df %>%
     rename('Sex'=SEX,
@@ -15,6 +23,12 @@ prepare_table <- function(df){
            'Region'=REGION,
            'Age Group'=AGEGROUP,
            'Cases'=CASES)
+}
+
+create_barplot <- function(df){
+  df %>%
+    plot_ly(
+      x = df$REGION, y = df$CASES, type = "bar", color = df$REGION)
 }
 
 create_datatable <- function(df,options){

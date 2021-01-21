@@ -128,5 +128,13 @@ server <- function(input,output,session){
       sum()
   })
   
+  # Plotly bar chart
+  output$region_bar_plot <- renderPlotly({
+    covid_dataset %>%
+      prepare_barplot('REGION') %>%
+      create_barplot()
+  })
+    
+  
 
 }
