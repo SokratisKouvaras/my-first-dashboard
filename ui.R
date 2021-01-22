@@ -4,7 +4,7 @@ ui <-  function(input,output,session){dashboardPagePlus  (
   header = dashboardHeaderPlus(title = 'My first Dashboard'),
   sidebar = dashboardSidebar(
     sidebarMenu(
-      menuItem("Tab 1", tabName = "dashboard", icon = icon("home")),
+      menuItem("Covid-19 Dashboard", tabName = "dashboard", icon = icon("home")),
       menuItem("Dataset Overview", tabName = "dataset", icon = icon("table"))
     )
   ),
