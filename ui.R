@@ -4,10 +4,8 @@ ui <-  function(input,output,session){dashboardPagePlus  (
   header = dashboardHeaderPlus(title = 'My first Dashboard'),
   sidebar = dashboardSidebar(
     sidebarMenu(
-      menuItem("Test", tabName = "test", icon = icon("home")),
       menuItem("Tab 1", tabName = "dashboard", icon = icon("home")),
-      menuItem("Dataset Overview", tabName = "dataset", icon = icon("table")),
-      menuItem("Tab 3", tabName = "visuals", icon = icon("area-chart"))
+      menuItem("Dataset Overview", tabName = "dataset", icon = icon("table"))
     )
   ),
   dashboardBody(
@@ -136,51 +134,7 @@ ui <-  function(input,output,session){dashboardPagePlus  (
       ),
       tabItem(tabName = "dataset",
               dataTableOutput("table")
-      ),
-      tabItem(tabName = "visuals",
-              fluidRow(title = "Registration",
-                       box(
-                         width=12,
-                         plotOutput("time_series"),
-                         title ="View 1",
-                         closable = TRUE,
-                         collapsible = TRUE,
-                         status = "warning",
-                         enable_sidebar = TRUE,
-                         sidebar_width = 12,
-                         sidebar_start_open = FALSE,
-                         selectInput("variable", "Drop-down choices: ",
-                                     c("Choice 1" = "choice1",
-                                       "Choice 2" = "choice2",
-                                       "Choice 3" = "choice3"),
-                                     selected = "choice1"),
-                         selectInput("attedance_time", "Drop-down choices: ",
-                                     c("Choice 1" = "choice1",
-                                       "Choice 2" = "choice2",
-                                       "Choice 3" = "choice3"),
-                                     selected="choice1")
-                       )
-              ),
-              fluidRow(title="Job Function",
-                       box(
-                         plotOutput("histogram"),
-                         width = 12,
-                         title = "View 2", 
-                         closable = TRUE, 
-                         status = "warning", 
-                         solidHeader = FALSE, 
-                         collapsible = TRUE,
-                         enable_sidebar = TRUE,
-                         sidebar_width = 12,
-                         selectInput("attedance_job_function", "Drop-down choices: ",
-                                     c("Choice 1" = "choice1",
-                                       "Choice 2" = "choice2",
-                                       "Choice 3" = "choice3"),
-                                     selected="choice1")
-                         
-                       )
-              )
-      )
+      )      
     )
   )
 )

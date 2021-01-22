@@ -30,15 +30,16 @@ create_region_barplot <- function(df){
   df %>%
     plot_ly() %>%
     add_trace(type = "bar",
-              x = df$REGION,
-              y = df$CASES,
+              x = ~REGION,
+              y = ~CASES,
               color = df$REGION) %>%
     layout(title = "Number of cases by region",
            xaxis = list(title = "Region",
                         categoryorder = "array",
-                        categoryarray = ~df$REGION,
+                        categoryarray = ~REGION,
                         zeroline = FALSE),
            yaxis = list(title = "Number of cases",
+                        showgrid = F,
                         zeroline = FALSE)) %>%
     config(displayModeBar = FALSE)
 }
@@ -47,14 +48,15 @@ create_province_barplot <- function(df){
   df %>%
     plot_ly() %>%
     add_trace(type = "bar",
-              x = df$PROVINCE,
-              y = df$CASES) %>%
+              x = ~PROVINCE,
+              y = ~CASES) %>%
     layout(title = "Number of cases by province",
            xaxis = list(title = "Province",
                         categoryorder = "array",
-                        categoryarray = ~df$PROVINCE,
+                        categoryarray = ~PROVINCE,
                         zeroline = FALSE),
            yaxis = list(title = "Number of cases",
+                        showgrid = F,
                         zeroline = FALSE)) %>%
     config(displayModeBar = FALSE)
 }
@@ -62,15 +64,18 @@ create_province_barplot <- function(df){
 create_timeline_histogram <- function(df){
   df %>%
     plot_ly() %>%
-    add_trace(type = "bar",
-              x = df$DATE,
-              y = df$CASES
+    add_trace(type = 'scatter',
+              mode = 'lines',
+              x = ~DATE,
+              y = ~CASES
               ) %>%
     layout(title = "Daily record of cases",
            xaxis = list(title = "Date",
+                        showgrid = F,
                         dtick = 7,
                         zeroline = FALSE),
            yaxis = list(title = "Number of cases",
+                        showgrid = F,
                         zeroline = FALSE)) %>%
     config(displayModeBar = FALSE)
 }
