@@ -132,9 +132,20 @@ server <- function(input,output,session){
   output$region_bar_plot <- renderPlotly({
     covid_dataset %>%
       prepare_barplot('REGION') %>%
-      create_barplot()
+      create_region_barplot()
   })
     
+  # Plotly bar chart
+  output$province_bar_plot <- renderPlotly({
+    covid_dataset %>%
+      prepare_barplot('PROVINCE') %>%
+      create_province_barplot()
+  })
   
-
+  # Plotly bar chart
+  output$timeline_plot <- renderPlotly({
+    covid_dataset %>%
+      #prepare_barplot('PROVINCE') %>%
+      create_timeline_histogram()
+  })
 }

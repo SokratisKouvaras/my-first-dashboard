@@ -77,28 +77,37 @@ ui <-  function(input,output,session){dashboardPagePlus  (
                     badgeColor = "red", 
                     dashboardBadge("2",color="orange")
                   )
+                )
                 ),
+              fluidRow(
                 boxPlus(
-                  title = "VIEW 1",
-                  plotOutput("word_cloud_companies", height = 250),
+                  title = "Timeline",
+                  radioButtons("grouping", "Group by:",
+                               c("Total" = "total",
+                                 "Region" = "region",
+                                 "Province" = "province"),
+                               inline = TRUE),
+                  plotlyOutput("timeline_plot", height = 250),
                   collapsed = FALSE,
                   status = "warning",
                   closable = FALSE,
                   collapsible = TRUE,
-                  width = 6,
-                  selectInput("no_of_companies", "Drop-down choices: ",
-                              c("Choice 1" = "choice1",
-                                "Choice 2" = "choice2",
-                                "Choice 3" = "choice3"),
-                              selected = "choice1"),
-                  selectInput("attedance", "Drop-down choices: ",
-                              c("Choice 1" = "choice1",
-                                "Choice 2" = "choice2",
-                                "Choice 3" = "choice3"),
-                              selected = "choice1")
+                  width = 12
+                  )
+                ),
+              fluidRow(
+                boxPlus(
+                  title = "Province Overview",
+                  plotlyOutput("province_bar_plot", height = 250),
+                  collapsed = FALSE,
+                  status = "warning",
+                  closable = FALSE,
+                  collapsible = TRUE,
+                  width = 6
+                  
                 ),
                 boxPlus(
-                  title = "VIEW 2",
+                  title = "Region Overview",
                   plotlyOutput("region_bar_plot", height = 250),
                   collapsed = FALSE,
                   status = "warning",
@@ -123,6 +132,7 @@ ui <-  function(input,output,session){dashboardPagePlus  (
                   )
                 )
               )
+              
       ),
       tabItem(tabName = "dataset",
               dataTableOutput("table")

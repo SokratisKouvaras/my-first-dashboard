@@ -12,6 +12,7 @@ prepare_barplot <- function(df,col){
     group_by(!!as.name(col)) %>%
     summarise(CASES = sum(CASES)) %>%
     mutate(!!as.name(col) := ifelse(is.na(!!as.name(col)),'Uknown',!!as.name(col))) %>%
+    arrange(desc(CASES)) %>%
     ungroup()
 }
 
@@ -25,11 +26,55 @@ prepare_table <- function(df){
            'Cases'=CASES)
 }
 
-create_barplot <- function(df){
+create_region_barplot <- function(df){
   df %>%
-    plot_ly(
-      x = df$REGION, y = df$CASES, type = "bar", color = df$REGION)
+    plot_ly() %>%
+    add_trace(type = "bar",
+              x = df$REGION,
+              y = df$CASES,
+              color = df$REGION) %>%
+    layout(title = "Number of cases by region",
+           xaxis = list(title = "Region",
+                        categoryorder = "array",
+                        categoryarray = ~df$REGION,
+                        zeroline = FALSE),
+           yaxis = list(title = "Number of cases",
+                        zeroline = FALSE)) %>%
+    config(displayModeBar = FALSE)
 }
+
+create_province_barplot <- function(df){
+  df %>%
+    plot_ly() %>%
+    add_trace(type = "bar",
+              x = df$PROVINCE,
+              y = df$CASES) %>%
+    layout(title = "Number of cases by province",
+           xaxis = list(title = "Province",
+                        categoryorder = "array",
+                        categoryarray = ~df$PROVINCE,
+                        zeroline = FALSE),
+           yaxis = list(title = "Number of cases",
+                        zeroline = FALSE)) %>%
+    config(displayModeBar = FALSE)
+}
+
+create_timeline_histogram <- function(df){
+  df %>%
+    plot_ly() %>%
+    add_trace(type = "bar",
+              x = df$DATE,
+              y = df$CASES
+              ) %>%
+    layout(title = "Daily record of cases",
+           xaxis = list(title = "Date",
+                        dtick = 7,
+                        zeroline = FALSE),
+           yaxis = list(title = "Number of cases",
+                        zeroline = FALSE)) %>%
+    config(displayModeBar = FALSE)
+}
+
 
 create_datatable <- function(df,options){
   df %>%
