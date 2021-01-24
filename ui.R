@@ -97,6 +97,17 @@ ui <-  function(input,output,session){dashboardPagePlus  (
                 ),
               fluidRow(
                 boxPlus(
+                  title = "Case distribution between provinces of the same Region",
+                  plotlyOutput("heatmap", height = 250),
+                  collapsed = FALSE,
+                  status = "warning",
+                  closable = FALSE,
+                  collapsible = TRUE,
+                  width = 12
+                )
+              ),
+              fluidRow(
+                boxPlus(
                   title = "Province Overview",
                   plotlyOutput("province_bar_plot", height = 250),
                   collapsed = FALSE,
