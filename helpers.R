@@ -43,6 +43,20 @@ prepare_province_timeline_plot <- function(df){
     ungroup()
 }
 
+prepare_agegroup_timeline_plot <- function(df){
+  df %>%
+    group_by(AGEGROUP,DATE) %>%
+    summarize(CASES=sum(CASES)) %>%
+    ungroup()
+}
+
+prepare_sex_timeline_plot <- function(df){
+  df %>%
+    group_by(SEX,DATE) %>%
+    summarize(CASES=sum(CASES)) %>%
+    ungroup()
+}
+
 prepare_table <- function(df){
   df %>%
     rename('Sex'=SEX,
@@ -100,7 +114,7 @@ create_total_timeline_histogram <- function(df){
            xaxis = list(title = "Date",
                         showgrid = F,
                         type = 'date',
-                        dtick = 5*86400000.0,
+                        dtick = 7*86400000.0,
                         zeroline = T),
            yaxis = list(title = "Number of cases",
                         showgrid = T,
@@ -110,19 +124,33 @@ create_total_timeline_histogram <- function(df){
 }
 
 create_region_timeline_histogram <- function(df){
-  df %>%
-    plot_ly() %>%
-    add_trace(type = 'scatter',
-              mode='lines',
-              x = ~DATE,
-              y = ~CASES,
-              color=~REGION
+  first_region <- df %>%
+    pull(REGION) %>%
+    unique()
+  first_region <- first_region[1]
+  
+    plot_ly(
+      data = df[which(df$REGION==first_region),],
+      type = 'scatter',
+      mode='lines',
+      x = ~DATE,
+      y = ~CASES,
+      color= ~REGION
+    ) %>%
+    add_trace(
+      data = df[which(!(df$REGION==first_region)),],
+      type = 'scatter',
+      mode='lines',
+      x = ~DATE,
+      y = ~CASES,
+      color=~REGION,
+      visible = "legendonly"
     ) %>%
     layout(title = "Daily record of cases by Region",
            xaxis = list(title = "Date",
                         showgrid = F,
                         type = 'date',
-                        dtick = 5*86400000.0,
+                        dtick = 7*86400000.0,
                         zeroline = FALSE),
            yaxis = list(title = "Number of cases",
                         showgrid = F,
@@ -132,6 +160,38 @@ create_region_timeline_histogram <- function(df){
   #   group_by(REGION) %>%
   #   do(p = plot_ly(., x = ~DATE, y = ~CASES)) %>%
   #   subplot(nrows = NROW(.), shareX = TRUE)
+}
+
+create_agegroup_timeline_histogram <- function(df){
+  first_agegroup <- df %>%
+    pull(AGEGROUP) %>%
+    unique()
+  first_agegroup <- first_agegroup[1]
+  
+  plot_ly(data = df[which(df$AGEGROUP==first_agegroup),],
+          type = 'scatter',
+          mode='lines',
+          x = ~DATE,
+          y = ~CASES,
+          color= ~AGEGROUP) %>%
+    add_trace(data = df[which(!(df$AGEGROUP==first_agegroup)),],
+              type = 'scatter',
+              mode='lines',
+              x = ~DATE,
+              y = ~CASES,
+              color=~AGEGROUP,
+              visible = "legendonly"
+    ) %>%
+    layout(title = "Daily record of cases by Age group",
+           xaxis = list(title = "Date",
+                        showgrid = F,
+                        type = 'date',
+                        dtick = 7*86400000.0,
+                        zeroline = FALSE),
+           yaxis = list(title = "Number of cases",
+                        showgrid = F,
+                        zeroline = TRUE)) %>%
+    config(displayModeBar = FALSE)
 }
 
 create_province_timeline_histogram <- function(df){
@@ -158,7 +218,39 @@ create_province_timeline_histogram <- function(df){
            xaxis = list(title = "Date",
                         showgrid = F,
                         type = 'date',
-                        dtick = 5*86400000.0,
+                        dtick = 7*86400000.0,
+                        zeroline = FALSE),
+           yaxis = list(title = "Number of cases",
+                        showgrid = F,
+                        zeroline = TRUE)) %>%
+    config(displayModeBar = FALSE)
+}
+
+create_sex_timeline_histogram <- function(df){
+  first_sex <- df %>%
+    pull(SEX) %>%
+    unique()
+  first_sex <- first_sex[1]
+  
+  plot_ly(data = df[which(df$SEX==first_sex),],
+          type = 'scatter',
+          mode='lines',
+          x = ~DATE,
+          y = ~CASES,
+          color= ~SEX) %>%
+    add_trace(data = df[which(!(df$SEX==first_sex)),],
+              type = 'scatter',
+              mode='lines',
+              x = ~DATE,
+              y = ~CASES,
+              color=~SEX,
+              visible = "legendonly"
+    ) %>%
+    layout(title = "Daily record of cases by Sex",
+           xaxis = list(title = "Date",
+                        showgrid = F,
+                        type = 'date',
+                        dtick = 7*86400000.0,
                         zeroline = FALSE),
            yaxis = list(title = "Number of cases",
                         showgrid = F,

@@ -88,6 +88,15 @@ server <- function(input,output,session){
       covid_dataset %>%
         prepare_province_timeline_plot() %>%
         create_province_timeline_histogram()
+    }else if(input$grouping=="agegroup") {
+      covid_dataset %>%
+        prepare_agegroup_timeline_plot() %>%
+        create_agegroup_timeline_histogram()
+    }else if(input$grouping=="sex") {
+      covid_dataset %>%
+        prepare_sex_timeline_plot() %>%
+        create_sex_timeline_histogram()
     }
+    
   })
 }
