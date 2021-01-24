@@ -24,12 +24,10 @@ server <- function(input,output,session){
     
   })
   
-  output$time_series <- renderPlot({
-    ggplot(filtered_df(),aes(x=filtered_df()[,8],color=data3$AttendanceState)) + 
-      geom_bar(color="#86BC25",fill="steelblue") + 
-      theme(axis.text.x = element_text(angle=45, hjust = 1)) + 
-      labs(x = "Registration Day") + 
-      scale_x_date(date_labels = "%d-%m-%Y",breaks='7 days')
+  # Test ----------------------------------------------
+  output$time_series <- renderPlotly({
+    covid_dataset %>%
+      create_animated()
   })
   
   # Total number of cases KPI box ----------------------------------------------
@@ -61,24 +59,35 @@ server <- function(input,output,session){
       sum()
   })
   
-  # Plotly bar chart
+  # Plotly Region bar chart ----------------------------------------------------
   output$region_bar_plot <- renderPlotly({
     covid_dataset %>%
       prepare_barplot('REGION') %>%
       create_region_barplot()
   })
     
-  # Plotly bar chart
+  # Plotly Province bar chart --------------------------------------------------
   output$province_bar_plot <- renderPlotly({
     covid_dataset %>%
       prepare_barplot('PROVINCE') %>%
       create_province_barplot()
   })
   
-  # Plotly bar chart
+  # Plotly Timeline line chart -------------------------------------------------
   output$timeline_plot <- renderPlotly({
+    req(input$grouping)
+    if(input$grouping=="total"){
     covid_dataset %>%
-      #prepare_barplot('PROVINCE') %>%
-      create_timeline_histogram()
+      prepare_total_timeline_plot () %>%
+      create_total_timeline_histogram()
+    }else if(input$grouping=="region") {
+      covid_dataset %>%
+        prepare_region_timeline_plot() %>%
+        create_region_timeline_histogram()
+    }else if(input$grouping=="province") {
+      covid_dataset %>%
+        prepare_province_timeline_plot() %>%
+        create_province_timeline_histogram()
+    }
   })
 }

@@ -13,6 +13,7 @@ my_packages <- c('shinydashboard',
                  'leaflet',
                  'ggplot2',
                  'plotly',
+                 'tidyr',
                  'dplyr',
                  'readxl',
                  'DT')

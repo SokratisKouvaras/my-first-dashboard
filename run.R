@@ -11,6 +11,7 @@ library(ggplot2)
 library(ggwordcloud)
 library(plotly)
 library(readxl)
+library(tidyr)
 library(dplyr)
 
 # Source additional configuration files and helper functions
@@ -18,6 +19,7 @@ source("config.R")
 source("helpers.R")
 
 covid_dataset <- get_dataset()
+
 port <- Sys.getenv('PORT')
 
 shiny::runApp(appDir = getwd(),
