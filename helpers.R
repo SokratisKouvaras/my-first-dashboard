@@ -90,6 +90,7 @@ create_total_timeline_histogram <- function(df){
               y = ~CASES
               ) %>%
     layout(title = "Daily record of cases",
+           hovermode = "x unified",
            xaxis = list(title = "Date",
                         showgrid = F,
                         type = 'date',
@@ -126,6 +127,7 @@ create_region_timeline_histogram <- function(df){
       visible = "legendonly"
     ) %>%
     layout(title = "Daily record of cases by Region",
+           hovermode = "x unified",
            xaxis = list(title = "Date",
                         showgrid = F,
                         type = 'date',
@@ -162,6 +164,7 @@ create_agegroup_timeline_histogram <- function(df){
               visible = "legendonly"
     ) %>%
     layout(title = "Daily record of cases by Age group",
+           hovermode = "x unified",
            xaxis = list(title = "Date",
                         showgrid = F,
                         type = 'date',
@@ -194,6 +197,7 @@ create_province_timeline_histogram <- function(df){
               visible = "legendonly"
      ) %>%
     layout(title = "Daily record of cases by Province",
+           hovermode = "x unified",
            xaxis = list(title = "Date",
                         showgrid = F,
                         type = 'date',
@@ -226,6 +230,7 @@ create_sex_timeline_histogram <- function(df){
               visible = "legendonly"
     ) %>%
     layout(title = "Daily record of cases by Sex",
+           hovermode = "x unified",
            xaxis = list(title = "Date",
                         showgrid = F,
                         type = 'date',
@@ -235,22 +240,6 @@ create_sex_timeline_histogram <- function(df){
                         showgrid = F,
                         zeroline = TRUE)) %>%
     config(displayModeBar = FALSE)
-}
-
-create_animated <- function(df){
-  df %>%
-    plot_ly(
-    x = ~REGION,
-    y = ~CASES,
-    #split = ~PROVINCE,
-    size = ~CASES,
-    color = ~SEX,
-    frame = ~DATE,
-    #text = ~country,
-    #hoverinfo = "text",
-    type = 'scatter',
-    mode = 'markers'
-  )
 }
 
 create_datatable <- function(df,options){
