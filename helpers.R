@@ -29,30 +29,9 @@ prepare_total_timeline_plot <- function(df){
     ungroup()
 }
 
-prepare_region_timeline_plot <- function(df){
+prepare_grouped_timeline_plot <- function(df,col_name){
   df %>%
-    group_by(REGION,DATE) %>%
-    summarize(CASES=sum(CASES)) %>%
-    ungroup()
-}
-
-prepare_province_timeline_plot <- function(df){
-  df %>%
-    group_by(PROVINCE,DATE) %>%
-    summarize(CASES=sum(CASES)) %>%
-    ungroup()
-}
-
-prepare_agegroup_timeline_plot <- function(df){
-  df %>%
-    group_by(AGEGROUP,DATE) %>%
-    summarize(CASES=sum(CASES)) %>%
-    ungroup()
-}
-
-prepare_sex_timeline_plot <- function(df){
-  df %>%
-    group_by(SEX,DATE) %>%
+    group_by(!!as.name(col_name),DATE) %>%
     summarize(CASES=sum(CASES)) %>%
     ungroup()
 }

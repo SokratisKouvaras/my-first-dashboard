@@ -82,19 +82,19 @@ server <- function(input,output,session){
       create_total_timeline_histogram()
     }else if(input$grouping=="region") {
       covid_dataset %>%
-        prepare_region_timeline_plot() %>%
+        prepare_grouped_timeline_plot('REGION') %>%
         create_region_timeline_histogram()
     }else if(input$grouping=="province") {
       covid_dataset %>%
-        prepare_province_timeline_plot() %>%
+        prepare_grouped_timeline_plot('PROVINCE') %>%
         create_province_timeline_histogram()
     }else if(input$grouping=="agegroup") {
       covid_dataset %>%
-        prepare_agegroup_timeline_plot() %>%
+        prepare_grouped_timeline_plot('AGEGROUP') %>%
         create_agegroup_timeline_histogram()
     }else if(input$grouping=="sex") {
       covid_dataset %>%
-        prepare_sex_timeline_plot() %>%
+        prepare_grouped_timeline_plot('SEX') %>%
         create_sex_timeline_histogram()
     }
     
