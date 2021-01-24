@@ -72,8 +72,18 @@ server <- function(input,output,session){
       prepare_barplot('PROVINCE') %>%
       create_province_barplot()
   })
+  
   # Plotly heatmap chart -------------------------------------------------
-  output$heatmap <- renderPlotly({
+  output$heatmap_per_agegroup <- renderPlotly({
+    covid_dataset %>%
+      group_by(AGEGROUP,SEX) %>%
+      summarise(CASES=sum(CASES)) %>%
+      plot_ly(x=~AGEGROUP,y=~SEX,z=~CASES,type="heatmap")%>%
+      config(displayModeBar = FALSE)
+  })
+  
+  # Plotly heatmap chart per region -------------------------------------------------
+  output$heatmap_per_region <- renderPlotly({
     x_order <- c('Brussels','Flanders','Wallonia','Unknown')
     y_order <- c('Brussels',
                  'Antwerpen',
@@ -103,6 +113,7 @@ server <- function(input,output,session){
       ) %>%
       config(displayModeBar = FALSE)
   })
+  
   # Plotly Timeline line chart -------------------------------------------------
   output$timeline_plot <- renderPlotly({
     req(input$grouping)

@@ -98,7 +98,18 @@ ui <-  function(input,output,session){dashboardPagePlus  (
               fluidRow(
                 boxPlus(
                   title = "Case distribution between provinces of the same Region",
-                  plotlyOutput("heatmap", height = 250),
+                  plotlyOutput("heatmap_per_region", height = 250),
+                  collapsed = FALSE,
+                  status = "warning",
+                  closable = FALSE,
+                  collapsible = TRUE,
+                  width = 12
+                )
+              ),
+              fluidRow(
+                boxPlus(
+                  title = "Case distribution between sexes per age group",
+                  plotlyOutput("heatmap_per_agegroup", height = 250),
                   collapsed = FALSE,
                   status = "warning",
                   closable = FALSE,
