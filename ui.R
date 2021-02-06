@@ -1,30 +1,31 @@
-ui <-  function(input,output,session){dashboardPagePlus  (
-  title = "My first Dashboard",
-  skin = "red",
-  header = dashboardHeaderPlus(title = 'My first Dashboard'),
-  sidebar = dashboardSidebar(
+sidebar <- dashboardSidebar(
     sidebarMenu(
-      menuItem("Covid-19 Dashboard", tabName = "dashboard", icon = icon("home")),
-      menuItem("Dataset Overview", tabName = "dataset", icon = icon("table"))
+      menuItem(
+        "Covid-19 Dashboard", 
+        tabName = "dashboard", 
+        icon = icon("home")
+        ),
+      menuItem(
+        "Dataset Overview", 
+        tabName = "dataset", 
+        icon = icon("table")
+        )
     )
-  ),
-  dashboardBody(
+  )
+
+header <- dashboardHeaderPlus(title = 'My first Dashboard')
+
+body <- dashboardBody(
     tabItems(
-      tabItem(tabName = 'test',
-              column(width = 12,
-              fluidRow(infoBoxOutput('total_number_of_cases_infobox',width = 3))
-              )
-              ),
-      tabItem(tabName = "dashboard",
-              fluidRow(
-                
+      tabItem(
+        tabName = "dashboard",
+            fluidRow(
                 boxPlus(
                   width = 12,
                   closable = FALSE,
                   collapsible = TRUE,
                   title = "Basic Metrics",
                   status = "warning",
-                  
                   appButton(
                     inputId = "kpi1",
                     label = "Total no of cases", 
@@ -139,10 +140,20 @@ ui <-  function(input,output,session){dashboardPagePlus  (
               )
               
       ),
-      tabItem(tabName = "dataset",
-              dataTableOutput("table")
+      tabItem(
+        tabName = "dataset",
+        fluidRow(
+          dataTableOutput("table")
+        )
       )      
     )
   )
-)
-}
+  
+ui <-  function(input,output,session){
+    dashboardPagePlus(
+      title = "My first Dashboard",
+      skin = "red",
+      header = header,
+      sidebar = sidebar,
+      body = body)
+  }
