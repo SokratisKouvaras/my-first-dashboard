@@ -1,5 +1,8 @@
 # init.R 
 
+packrat::on()
+packrat::restore()
+
 my_packages <- c('shinydashboard',
                  'shinydashboardPlus',
                  'shiny',
@@ -10,6 +13,9 @@ my_packages <- c('shinydashboard',
                  'leaflet',
                  'ggplot2',
                  'plotly',
+                 'tidyr',
+                 'dplyr',
+                 'readxl',
                  'DT')
 
 install_if_missing <- function(package){

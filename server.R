@@ -1,98 +1,171 @@
 server <- function(input,output,session){
   
-  filtered_df <- reactive({
-    if (input$variable=="all"){
-      res <- data3
-    }
-    else{
-      res <- data3[data3$RegistrationMethod == input$variable, ]
-    }
-    if (input$attedance_time=="all"){
-      res <- res
-    }
-    else{
-      res <- res[res$AttendanceState == input$attedance_time, ]
-      
-    }
-    res
-  })
-  
+  # Dataset table --------------------------------------------------------------
   output$table <- DT::renderDataTable({
-    
-    DT::datatable(
-      data3,
-      filter = 'top', extensions = c('Buttons', 'Scroller'),
-      options = list(scrollY = 500,
-                     scrollX = 500,
-                     deferRender = TRUE,
-                     scroller = FALSE,
-                     paging = TRUE,
-                     pageLength = 50,
-                     buttons = list(list(extend = 'colvis', targets = 0, visible = FALSE)),
-                     dom = 'lBfrtip',
-                     fixedColumns = TRUE), 
-      rownames = FALSE)
-  })
-  
-  output$time_series <- renderPlot({
-    ggplot(filtered_df(),aes(x=filtered_df()[,8],color=data3$AttendanceState)) + 
-      geom_bar(color="#86BC25",fill="steelblue") + 
-      theme(axis.text.x = element_text(angle=45, hjust = 1)) + 
-      labs(x = "Registration Day") + 
-      scale_x_date(date_labels = "%d-%m-%Y",breaks='7 days')
-  })
-  
-  output$word_cloud_companies <-renderPlot({
-    
-    if(input$attedance == "both"){
-      tempCompanies <- as.data.frame(xtabs(~ CompanyClass , data =data3))
-    }else{
-      tempCompanies <- as.data.frame(xtabs(~ CompanyClass , data = data3[data3$AttendanceState == input$attedance, ]))
+    tryCatch({
+      covid_dataset %>%
+        prepare_table() %>%
+        create_datatable(CONFIG_TABLE_OPTIONS)
+    },
+    error=function(err) {
+      warning(paste('output$table throws the following error: ',geterrmessage()))
+      column_names <- c(
+        'Date',
+        'Province',
+        'Region',
+        'Age Group',
+        'Sex',
+        'Cases'
+      )
+      create_empty_dataframe(column_names) %>%
+        create_datatable(CONFIG_TABLE_OPTIONS)
     }
-    response <- tempCompanies[tempCompanies$Freq >= input$no_of_companies, ]
-    
-    
-    ggplot(response, 
-           aes(
-             label = CompanyClass,size = Freq,
-             color = factor(sample.int(10, nrow(response), replace = TRUE)),)) +
-      geom_text_wordcloud(shape ="circle") +
-      theme_minimal()
+    )
     
   })
   
-  output$word_cloud_job_functions <-renderPlot({
-    
-    temp <- as.data.frame(xtabs(~ JobFunctionClass , data = data3))
-    
-    ggplot(temp, 
-           aes(
-             label = JobFunctionClass,size = Freq,
-             color = factor(sample.int(10, nrow(temp), replace = TRUE)),)) +
-      geom_text_wordcloud(shape ="circle") + 
-      theme_minimal()
-    
+  # Test ----------------------------------------------
+  output$time_series <- renderPlotly({
+    covid_dataset %>%
+      create_animated()
   })
   
-  output$histogram <- renderPlot({
+  # Total number of cases KPI box ----------------------------------------------
+  output$total_number_of_cases <- renderInfoBox({
+      infoBox(
+      title = "Total no of cases",
+      value = sum(covid_dataset$CASES)
+    )
+    })
+  
+  # Total number of cases Text output ------------------------------------------
+  output$total_number_of_cases <- renderText({
+    sum(covid_dataset$CASES)
+  })
+  
+  # Total cases of men ---------------------------------------------------------
+  output$no_of_men_cases <- renderText({
+    covid_dataset %>%
+      filter(SEX=='M') %>%
+      pull(CASES) %>%
+      sum() %>%
+      as.character()
+  })
+  
+  
+  # Total cases of women  ------------------------------------------------------
+  output$no_of_women_cases <- renderText({
+    covid_dataset %>%
+      filter(SEX=='F') %>%
+      pull(CASES) %>%
+      sum() %>%
+      as.character()
+  })
+  
+  # Last date of file update ---------------------------------------------------
+  output$max_date <- renderText({
+    covid_dataset %>%
+      filter(!(is.na(DATE))) %>%
+      pull(DATE) %>%
+      max() %>%
+      as.character()
+  })
+  
+  # Number of female cases KPI box ----------------------------------------------
+  output$total_number_of_cases_infobox <- renderInfoBox({
+    infoBox(
+      title = "Total no of cases",
+      value = sum(covid_dataset$CASES)
+    )
+  })
+  
+  # Number of female cases Text output ------------------------------------------
+  output$total_number_of_female_cases <- renderText({
+    covid_dataset %>%
+      filter(SEX=='F') %>%
+      pull(CASES) %>%
+      sum()
+  })
+  
+  # Plotly Region bar chart ----------------------------------------------------
+  output$region_bar_plot <- renderPlotly({
+    covid_dataset %>%
+      prepare_barplot('REGION') %>%
+      create_region_barplot()
+  })
     
-    if (input$attedance_job_function=="all"){
-      
-      filtered_data<-data3
-      
-    }else{
-      
-      filtered_data <- data3[data3$AttendanceState == input$attedance_job_function,]
-      
+  # Plotly Province bar chart --------------------------------------------------
+  output$province_bar_plot <- renderPlotly({
+    covid_dataset %>%
+      prepare_barplot('PROVINCE') %>%
+      create_province_barplot()
+  })
+  
+  # Plotly heatmap chart -------------------------------------------------
+  output$heatmap_per_agegroup <- renderPlotly({
+    covid_dataset %>%
+      group_by(AGEGROUP,SEX) %>%
+      summarise(CASES=sum(CASES)) %>%
+      plot_ly(x=~AGEGROUP,y=~SEX,z=~CASES,type="heatmap")%>%
+      config(displayModeBar = FALSE)
+  })
+  
+  # Plotly heatmap chart per region -------------------------------------------------
+  output$heatmap_per_region <- renderPlotly({
+    x_order <- c('Brussels','Flanders','Wallonia','Unknown')
+    y_order <- c('Brussels',
+                 'Antwerpen',
+                 'Limburg',
+                 'OostVlaanderen',
+                 'VlaamsBrabant',
+                 'WestVlaanderen',
+                 'BrabantWallon',
+                 'Hainaut',
+                 'Liège',
+                 'Luxembourg',
+                 'Namur',
+                 'Unknown')
+    covid_dataset %>%
+      group_by(REGION,PROVINCE) %>%
+      summarise(CASES=sum(CASES)) %>%
+      plot_ly(x=~REGION,y=~PROVINCE,z=~CASES,type="heatmap")%>%
+      layout(
+        xaxis=list(
+          categoryorder = "array",
+          categoryarray = x_order
+        ),
+        yaxis=list(
+          categoryorder = "array",
+          categoryarray = y_order
+        )
+      ) %>%
+      config(displayModeBar = FALSE)
+  })
+  
+  # Plotly Timeline line chart -------------------------------------------------
+  output$timeline_plot <- renderPlotly({
+    req(input$grouping)
+    if(input$grouping=="total"){
+    covid_dataset %>%
+      prepare_total_timeline_plot () %>%
+      create_total_timeline_histogram()
+    }else if(input$grouping=="region") {
+      covid_dataset %>%
+        prepare_grouped_timeline_plot('REGION') %>%
+        create_region_timeline_histogram()
+    }else if(input$grouping=="province") {
+      covid_dataset %>%
+        prepare_grouped_timeline_plot('PROVINCE') %>%
+        create_province_timeline_histogram()
+    }else if(input$grouping=="agegroup") {
+      covid_dataset %>%
+        prepare_grouped_timeline_plot('AGEGROUP') %>%
+        create_agegroup_timeline_histogram()
+    }else if(input$grouping=="sex") {
+      covid_dataset %>%
+        prepare_grouped_timeline_plot('SEX') %>%
+        create_sex_timeline_histogram()
     }
     
-    ggplot(filtered_data,aes(x=filtered_data[,15])) + 
-      geom_bar(color="#86BC25",fill="steelblue") + 
-      labs(x = "Job Function") + 
-      theme(axis.text.x = element_text(angle=45, hjust = 1))
   })
-  
-  output$no_of_participants <- renderText({ nrow(data3) })
-  
-  output$org_name <- renderText({unique(data3[,2])}) 
 }
