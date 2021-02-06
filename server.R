@@ -43,6 +43,34 @@ server <- function(input,output,session){
     sum(covid_dataset$CASES)
   })
   
+  # Total cases of men ---------------------------------------------------------
+  output$no_of_men_cases <- renderText({
+    covid_dataset %>%
+      filter(SEX=='M') %>%
+      pull(CASES) %>%
+      sum() %>%
+      as.character()
+  })
+  
+  
+  # Total cases of women  ------------------------------------------------------
+  output$no_of_women_cases <- renderText({
+    covid_dataset %>%
+      filter(SEX=='F') %>%
+      pull(CASES) %>%
+      sum() %>%
+      as.character()
+  })
+  
+  # Last date of file update ---------------------------------------------------
+  output$max_date <- renderText({
+    covid_dataset %>%
+      filter(!(is.na(DATE))) %>%
+      pull(DATE) %>%
+      max() %>%
+      as.character()
+  })
+  
   # Number of female cases KPI box ----------------------------------------------
   output$total_number_of_cases_infobox <- renderInfoBox({
     infoBox(

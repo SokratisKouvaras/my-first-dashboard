@@ -35,45 +35,28 @@ ui <-  function(input,output,session){dashboardPagePlus  (
                   ),
                   appButton(
                     inputId = "kpi2",
-                    label = "KPI 2", 
-                    icon = icon("users"), 
+                    label = "Last Updated", 
+                    icon = icon("calendar-check"), 
                     enable_badge = TRUE, 
                     badgeColor = "red",
-                    dashboardBadge(textOutput("total_number_of_female_cases",inline=TRUE), color = "orange")
+                    dashboardBadge(textOutput("max_date",inline=TRUE), color = "orange")
                   ),
                   
                   appButton(
-                    inputId = "USD1",
-                    label = "KPI 3",
-                    url = "",
-                    icon = icon("home"), 
-                    enable_badge = FALSE, 
-                    badgeColor = NULL, 
-                    badgeLabel = NULL
-                  ),
-                  appButton(
-                    inputId = "USD2",
-                    label = "KPI 3", 
-                    icon = icon("calendar"), 
+                    inputId = "kpi3",
+                    label = "Total cases of men",
+                    icon = icon("male"), 
                     enable_badge = TRUE, 
                     badgeColor = "red", 
-                    badgeLabel = NULL
+                    dashboardBadge(textOutput("no_of_men_cases",inline=TRUE), color = "orange")
                   ),
                   appButton(
-                    inputId = "USD2",
-                    label = "KPI 4", 
-                    icon = icon("calendar"), 
+                    inputId = "kpi4",
+                    label = "Total cases of women", 
+                    icon = icon("female"), 
                     enable_badge = TRUE, 
                     badgeColor = "red", 
-                    badgeLabel = NULL
-                  ),
-                  appButton(
-                    inputId = "USD3",
-                    label = "KPI 5", 
-                    icon = icon("language"), 
-                    enable_badge = TRUE, 
-                    badgeColor = "red", 
-                    dashboardBadge("2",color="orange")
+                    dashboardBadge(textOutput("no_of_women_cases",inline=TRUE), color = "orange")
                   )
                 )
                 ),
