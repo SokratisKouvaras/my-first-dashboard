@@ -1,3 +1,9 @@
+# run file as a file that is being run once before your app starts.
+# That means you can use it for all sorts of data processing, running models, and
+# of course, to load in your data.
+# Any R objects that are created in the run file become available to the
+# app.R file, or the ui.R and server.R files.
+
 # Load all the packages we want!
 library(shinydashboard)
 library(shinydashboardPlus)
@@ -11,7 +17,6 @@ library(ggplot2)
 library(ggwordcloud)
 library(plotly)
 library(readxl)
-library(tidyr)
 library(dplyr)
 
 # Source additional configuration files and helper functions
