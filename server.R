@@ -24,20 +24,6 @@ server <- function(input,output,session){
     
   })
   
-  # Test ----------------------------------------------
-  output$time_series <- renderPlotly({
-    covid_dataset %>%
-      create_animated()
-  })
-  
-  # Total number of cases KPI box ----------------------------------------------
-  output$total_number_of_cases <- renderInfoBox({
-      infoBox(
-      title = "Total no of cases",
-      value = sum(covid_dataset$CASES)
-    )
-    })
-  
   # Total number of cases Text output ------------------------------------------
   output$total_number_of_cases <- renderText({
     sum(covid_dataset$CASES)
@@ -62,29 +48,13 @@ server <- function(input,output,session){
       as.character()
   })
   
-  # Last date of file update ---------------------------------------------------
+  ### Last date of file update ---------------------------------------------------
   output$max_date <- renderText({
     covid_dataset %>%
       filter(!(is.na(DATE))) %>%
       pull(DATE) %>%
       max() %>%
       as.character()
-  })
-  
-  # Number of female cases KPI box ----------------------------------------------
-  output$total_number_of_cases_infobox <- renderInfoBox({
-    infoBox(
-      title = "Total no of cases",
-      value = sum(covid_dataset$CASES)
-    )
-  })
-  
-  # Number of female cases Text output ------------------------------------------
-  output$total_number_of_female_cases <- renderText({
-    covid_dataset %>%
-      filter(SEX=='F') %>%
-      pull(CASES) %>%
-      sum()
   })
   
   # Plotly Region bar chart ----------------------------------------------------
