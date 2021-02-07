@@ -5,38 +5,15 @@ server <- function(input,output,session){
     tryCatch({
       covid_dataset %>%
         prepare_table() %>%
-        create_datatable(CONFIG_TABLE_OPTIONS)
+        create_datatable(CONFIG.TABLE_OPTIONS)
     },
     error=function(err) {
       warning(paste('output$table throws the following error: ',geterrmessage()))
-      column_names <- c(
-        'Date',
-        'Province',
-        'Region',
-        'Age Group',
-        'Sex',
-        'Cases'
-      )
-      create_empty_dataframe(column_names) %>%
+      create_empty_dataframe(CONFIG.TABLE_COLUMN_NAMES) %>%
         create_datatable(CONFIG_TABLE_OPTIONS)
     }
     )
-    
   })
-  
-  # Test ----------------------------------------------
-  output$time_series <- renderPlotly({
-    covid_dataset %>%
-      create_animated()
-  })
-  
-  # Total number of cases KPI box ----------------------------------------------
-  output$total_number_of_cases <- renderInfoBox({
-      infoBox(
-      title = "Total no of cases",
-      value = sum(covid_dataset$CASES)
-    )
-    })
   
   # Total number of cases Text output ------------------------------------------
   output$total_number_of_cases <- renderText({
@@ -62,29 +39,13 @@ server <- function(input,output,session){
       as.character()
   })
   
-  # Last date of file update ---------------------------------------------------
+  # Last date of dataset update ------------------------------------------------
   output$max_date <- renderText({
     covid_dataset %>%
       filter(!(is.na(DATE))) %>%
       pull(DATE) %>%
       max() %>%
       as.character()
-  })
-  
-  # Number of female cases KPI box ----------------------------------------------
-  output$total_number_of_cases_infobox <- renderInfoBox({
-    infoBox(
-      title = "Total no of cases",
-      value = sum(covid_dataset$CASES)
-    )
-  })
-  
-  # Number of female cases Text output ------------------------------------------
-  output$total_number_of_female_cases <- renderText({
-    covid_dataset %>%
-      filter(SEX=='F') %>%
-      pull(CASES) %>%
-      sum()
   })
   
   # Plotly Region bar chart ----------------------------------------------------
@@ -112,19 +73,6 @@ server <- function(input,output,session){
   
   # Plotly heatmap chart per region -------------------------------------------------
   output$heatmap_per_region <- renderPlotly({
-    x_order <- c('Brussels','Flanders','Wallonia','Unknown')
-    y_order <- c('Brussels',
-                 'Antwerpen',
-                 'Limburg',
-                 'OostVlaanderen',
-                 'VlaamsBrabant',
-                 'WestVlaanderen',
-                 'BrabantWallon',
-                 'Hainaut',
-                 'Liège',
-                 'Luxembourg',
-                 'Namur',
-                 'Unknown')
     covid_dataset %>%
       group_by(REGION,PROVINCE) %>%
       summarise(CASES=sum(CASES)) %>%
@@ -132,11 +80,11 @@ server <- function(input,output,session){
       layout(
         xaxis=list(
           categoryorder = "array",
-          categoryarray = x_order
+          categoryarray = CONFIG.X_AXIS
         ),
         yaxis=list(
           categoryorder = "array",
-          categoryarray = y_order
+          categoryarray = CONFIG.Y_AXIS
         )
       ) %>%
       config(displayModeBar = FALSE)
